@@ -55,7 +55,6 @@ This function will create and insert/append the elements needed for the paginati
 function addPagination(list) {
   let pagination_buttons_needed = Math.ceil(list.length / 9);
   let ul_link_list = document.querySelector('.link-list');
-  let html = '';
   ul_link_list.innerHTML = '';
   for ( let i = 1; i <= pagination_buttons_needed; i++ ) {
     let button_html =  `<li>
@@ -64,11 +63,13 @@ function addPagination(list) {
     ul_link_list.insertAdjacentHTML('beforeend', button_html);
     
   }
+  // If there are no student list items, display 'No Results Found' and exit function
   let first_pagination_button = ul_link_list.querySelector('li:first-child');
   if (!first_pagination_button) {
     ul_link_list.innerHTML = '<p>No Results Found</p>';
     return
   }
+  // Mark the first pagination button as active and when a user clicks another pagination button mark that as active
   first_pagination_button.className = 'active';
   ul_link_list.addEventListener('click', (event) => {
     if (event.target.tagName === 'BUTTON') {
@@ -87,6 +88,11 @@ function addPagination(list) {
   }
 
 
+
+/*
+Create the `showSearchBar` function
+This function will create and insert/append the elements needed to display a search bar
+*/
 function showSearchBar() {
     let search_bar_html = `
       <label for="search" class="student-search">
@@ -99,39 +105,38 @@ function showSearchBar() {
     header.insertAdjacentHTML('beforeend', search_bar_html);
   }
 
-//function showNoResults() {
-//  let student_list = document.querySelector('.student-list')
-//  let no_results_html = '<p>No results found</p>';
-//  student_list.innerHTML = no_results_html;
-//  console.log(student_list);
-//}
 
 
-// Call functions
+/*
+Create the `addSearchFunctionality` function
+This function will create and insert/append the elements needed to display results based off of the search bar input
+*/
+function addSearchFunctionality(list) {
+  let search_bar_input = document.getElementById('search');
+  search_bar_input.addEventListener('keyup', (event) => {
+    let substring = event.target.value
+    let search_results_list = [];
+ 
+    for (let i = 0; i < list.length; i++) {
+      substring = event.target.value.toLowerCase()
+      let first_name = list[i]['name']['first'].toLowerCase();
+      let last_name = list[i]['name']['last'].toLowerCase();
+      if ( (first_name.includes(substring) || last_name.includes(substring)) ) {
+        search_results_list.push(list[i]);
+      }
+    }
+   
+    showPage(search_results_list, 1);
+    addPagination(search_results_list);
+  })
+}
+
+
+
+
+// Call functions 
 showPage(data, 1);
 showSearchBar();
 addPagination(data);
-
-
-
-
-
-let search_bar_input = document.getElementById('search');
-search_bar_input.addEventListener('keyup', (event) => {
-  let substring = event.target.value
-  let search_results_list = [];
-  console.log(substring);
-  for (let i = 0; i < data.length; i++) {
-    substring = event.target.value.toLowerCase()
-    console.log(substring);
-    let first_name = data[i]['name']['first'].toLowerCase();
-    let last_name = data[i]['name']['last'].toLowerCase();
-    if ( (first_name.includes(substring) || last_name.includes(substring)) ) {
-      search_results_list.push(data[i]);
-    }
-  }
-  console.log(search_results_list);
-  showPage(search_results_list, 1);
-  addPagination(search_results_list);
-})
+addSearchFunctionality(data);
 
