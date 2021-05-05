@@ -64,7 +64,7 @@ function addPagination(list) {
     
   }
   // If there are no student list items, display 'No Results Found' and exit function
-  let first_pagination_button = ul_link_list.querySelector('li:first-child');
+  let first_pagination_button = ul_link_list.querySelector('button:first-child');
   if (!first_pagination_button) {
     ul_link_list.innerHTML = '<p>No Results Found</p>';
     return
@@ -73,13 +73,13 @@ function addPagination(list) {
   first_pagination_button.className = 'active';
   ul_link_list.addEventListener('click', (event) => {
     if (event.target.tagName === 'BUTTON') {
-      let current_link = event.target.parentNode;
+      let current_link = event.target;
       let page_number = event.target.textContent;
       if (current_link.className === 'active') {
         showPage(list, page_number);
       } else if (current_link.className != 'active') {
           let active_link = ul_link_list.querySelector('.active');
-          active_link.className = '';
+          active_link.removeAttribute('class');
           current_link.className = 'active';
           showPage(list, page_number);
       }
